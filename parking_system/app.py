@@ -246,5 +246,6 @@ def remove_car():
 
 
 if __name__ == '__main__':
-    # 개발용: 외부 접속 허용(같은 LAN에서 확인 가능). 보안 필요 시 host='127.0.0.1'로 바꿔라.
-    app.run(host='0.0.0.0', port=5000, debug=False)
+    port = int(os.environ.get("PORT", 5000))
+    app.run(host="0.0.0.0", port=port, debug=False)
+
