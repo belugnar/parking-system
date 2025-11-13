@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <title>기계식 주차 관리</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+  <h2>🚗 기계식 주차 관리 시스템</h2>
+
+  <div class="form">
+    <input type="text" id="plate" placeholder="차량번호 입력">
+    <label><input type="checkbox" id="small"> 경차</label>
+    <select id="machine">
+      <option value="1">1호기</option>
+      <option value="2">2호기</option>
+      <option value="3">3호기</option>
+    </select>
+    <button id="addBtn">등록</button>
+  </div>
+
+  <div id="machines" class="parking-container">
+    <div class="lot">
+      <h3>1호기</h3>
+      <div id="m1" class="lot-cars"></div>
+    </div>
+    <div class="lot">
+      <h3>2호기</h3>
+      <div id="m2" class="lot-cars"></div>
+    </div>
+    <div class="lot">
+      <h3>3호기</h3>
+      <div id="m3" class="lot-cars"></div>
+    </div>
+  </div>
+
+<script>
+async function loadCars() {
+  const res = await fetch('/list');
+  const cars = await res.json();
+  const machines = {1: [], 2: [], 3: []};
+  cars.forEach(c => machines[c[4]].push(c)); // c schema: (id, plate, low_emission, small, machine, exit_order) - index mapping
+  for (let i=1;i<=3;i++) {
+    const container = document.getElementById('m'+i);
+    container.innerHTML = '';
+    machines[i].forEach(c => {
+      const id = c[0], plate = c[1], low = c[2], small = c[3], machine = c[4], exit_order = c[5];
+      const block = document.createElement('div');
+      block.className = 'car-block' + (small ? ' small' : '') + (low ? ' low' : '');
+      block.dataset.id = id;
+      block.dataset.exit = exit_order;
+      const span = document.createElement('span');
+      span.textContent = plate;
+      block.appendChild(span);
+
+      const btn = document.createElement('button');
+      btn.className = 'exit-btn';
+      if (!exit_order || exit_order === 0) {
+        btn.textContent = '출차';
+      } else {
+        btn.textContent = exit_order;
+      }
+      btn.onclick = async () => {
+        const currentOrder = parseInt(block.dataset.exit);
+        if (!currentOrder || currentOrder === 0) {
+          await fetch(`/queue_exit/${id}`, {method:'POST'});
+        } else if (currentOrder === 1) {
+          await fetch(`/exit/${id}`, {method:'POST'});
+        }
+        loadCars();
+      };
+      block.appendChild(btn);
+      container.appendChild(block);
+    });
+  }
+}
+
+document.getElementById('addBtn').onclick = async () => {
+  const plate = document.getElementById('plate').value.trim();
+  if (!plate) return alert('차량번호를 입력하세요');
+  const small = document.getElementById('small').checked;
+  const machine = document.getElementById('machine').value;
+  const body = { plate, small, machine };
+  const res = await fetch('/add', {
+    method: 'POST',
+    headers: {'Content-Type': 'application/json'},
+    body: JSON.stringify(body)
+  });
+  const j = await res.json();
+  if (j.success) {
+    document.getElementById('plate').value = '';
+    loadCars();
+  } else {
+    alert('등록 실패');
+  }
+};
+
+loadCars();
+setInterval(loadCars, 5000);
+</script>
+</body>
+</html>

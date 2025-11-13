@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>기계식 주차 관리 시스템</title>
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+    <h2>기계식 주차 관리 시스템</h2>
+    <div class="form">
+        <input type="text" id="plate" placeholder="차량번호 입력">
+        <label><input type="checkbox" id="small"> 경차</label>
+        <select id="machine">
+            <option value="1">1호기</option>
+            <option value="2">2호기</option>
+            <option value="3">3호기</option>
+        </select>
+        <button onclick="addCar()">등록</button>
+    </div>
+    <div id="machines">
+        <div class="machine" id="m1"><h3>1호기</h3><ul></ul></div>
+        <div class="machine" id="m2"><h3>2호기</h3><ul></ul></div>
+        <div class="machine" id="m3"><h3>3호기</h3><ul></ul></div>
+    </div>
+<script src="/static/script.js"></script>
+</body>
+</html>

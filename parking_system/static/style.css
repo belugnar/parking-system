@@ -1,0 +1,12 @@
+body { font-family: sans-serif; background: #f2f2f2; padding: 20px; }
+h2 { text-align: center; }
+.form { text-align: center; margin-bottom: 20px; }
+.parking-container { display:flex; justify-content:center; gap:20px; }
+.lot { background: white; padding: 10px; border-radius: 10px; width: 260px; box-shadow: 0 2px 6px rgba(0,0,0,0.08); }
+.lot h3 { text-align:center; margin:5px 0 10px 0; }
+.lot-cars { display:flex; flex-wrap:wrap; gap:10px; justify-content:center; min-height:60px; }
+.car-block { background: #e0e0e0; border-radius:8px; padding:8px 10px; width:90px; display:flex; flex-direction:column; align-items:center; }
+.car-block.low { background: #fff68f; } /* 저공해 (노란) */
+.car-block.small { background: #4da3ff; transform: scale(0.85); color: white; } /* 경차: 파란색, 약간 작게 */
+.exit-btn { margin-top:6px; background:white; border:none; border-radius:6px; padding:4px 8px; cursor:pointer; }
+.exit-btn:hover { background:#f0f0f0; }
